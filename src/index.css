@@ -51,11 +51,6 @@
   border-radius: 5px;
 }
 
-.prevTab img {
-  height: 20px;
-  margin-right: 5px;
-}
-
 .prevTab button {
   display: flex;
   margin-left: auto;
@@ -77,7 +72,6 @@
   width: 90vw;
   padding: 10px;
   line-height: 1.5;
-  overflow-wrap: break-word;
   border-radius: 5px;
 }
 
@@ -114,8 +108,27 @@
   margin-top: 5px;
 }
 
-.credits a img {
+svg {
   width: 20px;
-  height: 20px;
+  height: auto;
+  vertical-align: middle;
   margin: 0 5px;
+}
+
+.credits svg {
+  color: black;
+}
+
+@media (max-width: 500px) {
+  .previewer img {
+    max-width: 200px;
+  }
+
+  .App {
+    font-size: 0.8rem;
+  }
+
+  .editor textarea {
+    font-size: 0.8rem;
+  }
 }

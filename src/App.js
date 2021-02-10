@@ -1,9 +1,14 @@
-import React, { Component } from 'react';
+import { useState } from 'react';
+
+// Markdown dependencies
 import marked from 'marked';
 import DOMPurify from 'dompurify';
-import markdown from './markdown.svg';
-import github from './githubIcon.svg';
 
+// Icons
+import { FaMarkdown } from 'react-icons/fa';
+import { AiFillGithub } from 'react-icons/ai';
+
+// Boilerplate Markdown
 const initialMarkdown = `
 # Welcome to my React Markdown Previewer!
 
@@ -39,80 +44,62 @@ There's also [links](https://www.freecodecamp.com), and
 
 `;
 
-class App extends Component {
-  state = {
-    markdown: initialMarkdown,
-    hidden: false,
-  };
-  getMarkdownText() {
-    let rawMarkup = DOMPurify.sanitize(
-      marked(this.state.markdown, {
-        breaks: true,
-      })
-    );
+const App = () => {
+  const [markdown, setMarkdown] = useState(initialMarkdown);
+  const [hidden, setHidden] = useState(false);
+
+  // This function will run everytime there's a change in the editor.
+  // It will pass the markdown string that is stored in the state into 'marked' function.
+  const getMarkdownText = () => {
+    let rawMarkup = DOMPurify.sanitize(marked(markdown, { breaks: true }));
     return { __html: rawMarkup };
-  }
-
-  handleChange = (e) => {
-    const { name, value } = e.target;
-    this.setState({
-      [name]: value,
-    });
   };
 
-  handleHide = (e) => {
-    this.setState((prevState) => ({
-      hidden: prevState.hidden ? false : true,
-    }));
-  };
-
-  render() {
-    const textarea = this.state.hidden
-      ? { display: 'none' }
-      : { display: 'block' };
-    const editorHeight = this.state.hidden
-      ? { height: '0px' }
-      : { height: '240px' };
-
-    return (
-      <div className="App">
-        <div className="editor" style={editorHeight}>
-          <div className="prevTab">
-            <img src={markdown} alt="markdown"></img>Editor
-            <button onClick={this.handleHide}>Hide</button>
-          </div>
-          <textarea
-            id="editor"
-            name="markdown"
-            value={this.state.markdown}
-            onChange={this.handleChange}
-            cols="40"
-            rows="auto"
-            style={textarea}
-          />
-        </div>
+  return (
+    <div className="App">
+      {/* Editor */}
+      <div className="editor" style={{ height: hidden ? '0px' : '240px' }}>
         <div className="prevTab">
-          <img src={markdown} alt="markdown"></img>Previewer
+          <FaMarkdown /> Editor
+          <button onClick={() => setHidden((prevState) => !prevState)}>
+            Hide
+          </button>
         </div>
-        <div
-          className="previewer"
-          id="preview"
-          dangerouslySetInnerHTML={this.getMarkdownText()}
+        <textarea
+          id="editor"
+          name="markdown"
+          value={markdown}
+          onChange={(e) => setMarkdown(e.target.value)}
+          cols="40"
+          rows="auto"
+          style={{ display: hidden ? 'none' : 'block' }}
         />
-        <div className="credits">
-          <p>Designed and Coded By</p>
-          <a
-            href="https://github.com/pomubry"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <img src={github} alt="github icon" />
-            Bryan Taduran
-          </a>
-        </div>
       </div>
-    );
-  }
-}
+
+      {/* Display Preview */}
+      <div className="prevTab">
+        <FaMarkdown /> Previewer
+      </div>
+      <div
+        className="previewer"
+        id="preview"
+        dangerouslySetInnerHTML={getMarkdownText()}
+      />
+
+      {/* Profile Link */}
+      <div className="credits">
+        <p>Designed and Coded By</p>
+        <a
+          href="https://github.com/pomubry"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <AiFillGithub />
+          Bryan Taduran
+        </a>
+      </div>
+    </div>
+  );
+};
 
 export default App;
